@@ -87,3 +87,43 @@ router.delete('/:id', async (req, res) => {
 });
 
 module.exports = router;
+
+// @route   PUT /api/expenses/:id
+// @desc    Update an expense
+// @access  Public
+router.put('/:id', async (req, res) => {
+    const { user, amount, category, description, date } = req.body;
+    const expenseFields = { user, amount, category, description, date };
+    try {
+        let expense = await Expense.findById(req.params.id);
+        if (!expense) {
+            return res.status(404).json({ msg: 'Expense not found' });
+        }
+        expense = await Expense.findByIdAndUpdate(
+            req.params.id,
+            { $set: expenseFields },
+            { new: true }
+        );
+        res.json(expense);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
+// @route   DELETE /api/expenses/:id
+// @desc    Delete an expense
+// @access  Public
+router.delete('/:id', async (req, res) => {
+    try {
+        const expense = await Expense.findById(req.params.id);
+        if (!expense) {
+            return res.status(404).json({ msg: 'Expense not found' });
+        }
+        await expense.remove();
+        res.json({ msg: 'Expense removed' });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
