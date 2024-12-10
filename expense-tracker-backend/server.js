@@ -14,6 +14,12 @@ app.use(express.json({ extended: false }));
 app.use('/api/users', require('./routes/api/userRoutes'));
 app.use('/api/expenses', require('./routes/api/expenseRoutes'));
 
+// Define a simple route for the root URL
+app.get('/', (req, res) => res.send('API is running'));
+
+// Define a catch-all route for undefined routes
+app.use((req, res) => res.status(404).send('Route not found'));
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
