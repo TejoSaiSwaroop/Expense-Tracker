@@ -12,6 +12,7 @@ app.use(express.json({ extended: false }));
 
 // Define Routes
 app.use('/api/users', require('./routes/api/userRoutes'));
+app.use('/api/auth', require('./routes/api/authRoutes')); // Separate auth route
 app.use('/api/expenses', require('./routes/api/expenseRoutes'));
 
 // Define a simple route for the root URL
