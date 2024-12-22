@@ -1,7 +1,6 @@
 const express = require('express');
 const User = require('../../models/User');
 const router = express.Router();
-const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { check, validationResult } = require('express-validator');
 
@@ -28,8 +27,8 @@ router.post(
                 return res.status(400).json({ msg: 'Invalid Credentials' });
             }
 
-            const isMatch = await bcrypt.compare(password, user.password);
-            if (!isMatch) {
+            // Check if the provided password matches the stored password
+            if (password !== user.password) {
                 return res.status(400).json({ msg: 'Invalid Credentials' });
             }
 

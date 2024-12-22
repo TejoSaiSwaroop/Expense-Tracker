@@ -1,13 +1,12 @@
 const express = require('express');
-const User = require('../../models/User');
 const router = express.Router();
-const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { check, validationResult } = require('express-validator');
+const User = require('../../models/User'); // Adjust the path as necessary
 
-// @route   POST /api/users
-// @desc    Register a new user
-// @access  Public
+// @route    POST api/users
+// @desc     Register user
+// @access   Public
 router.post(
     '/',
     [
@@ -25,6 +24,7 @@ router.post(
 
         try {
             let user = await User.findOne({ email });
+
             if (user) {
                 return res.status(400).json({ msg: 'User already exists' });
             }
@@ -32,11 +32,8 @@ router.post(
             user = new User({
                 name,
                 email,
-                password
+                password // Store password as plain text
             });
-
-            const salt = await bcrypt.genSalt(10);
-            user.password = await bcrypt.hash(password, salt);
 
             await user.save();
 
